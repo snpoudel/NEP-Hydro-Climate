@@ -35,6 +35,8 @@ for id in basin_list['id']:
     obs_df['Streamflow'] = obs_df['Streamflow'] * 86400 / (basin_area * 1000)
     #change column name
     obs_df = obs_df.rename(columns={'Date': 'date', 'Streamflow': 'qobs'})
+    #change any negative values to nan
+    obs_df.loc[obs_df['qobs'] < 0, 'qobs'] = np.nan
 
     #merge obs_df and df by date
     df = pd.merge(df, obs_df, on='date', how='left')
