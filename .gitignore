@@ -3,5 +3,6 @@ figures/*
 gis/*
 output/*
 __pycache__/*
+ncss_data/*
 
 
