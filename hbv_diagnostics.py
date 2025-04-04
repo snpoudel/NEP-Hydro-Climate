@@ -20,7 +20,7 @@ def kge(obs, sim):
     return kge_value
 
 #basin list
-basin_list = pd.read_csv('data/basins.csv', dtype={'id': str})
+basin_list = pd.read_csv('data/basins_og.csv', dtype={'id': str})
 
 df_train = pd.DataFrame(columns=['id', 'nse', 'kge', 'rmse'])
 df_test = pd.DataFrame(columns=['id', 'nse', 'kge', 'rmse'])
@@ -66,7 +66,5 @@ plt.title('NSE Values for Train and Test Periods')
 plt.legend()
 plt.grid(True, linestyle='--', alpha=0.5)
 plt.tight_layout()
-plt.savefig('output/nse.png', dpi=300)
+# plt.savefig('output/nse.png', dpi=300)
 plt.show()
-
-plt.plot(out_df_test['precip'])
