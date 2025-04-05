@@ -26,7 +26,7 @@ lat_lon_combinations = np.array(np.meshgrid(lat_range, lon_range)).T.reshape(-1,
 ###########################################################################################################################################################################################################################################
 #read future climate data and calculate time series for selected basin
 # model = ['CNRM-CM6-1', 'ACCESS-CM2']
-model = ['ACCESS-CM2']
+model = ['CNRM-CM6-1']
 scenario = ['ssp245', 'ssp585']
 product = ['pr', 'tasmax', 'tasmin']
 
@@ -35,8 +35,8 @@ for mod in model:
         for prod in product:
             #loop through years from 2020 to 2100
             df = pd.DataFrame() #to save time series data for each product
-            for yr in range(2020, 2101):
-                file_name = f'{prod}_day_{mod}_{sc}_r1i1p1f1_gn_{yr}.nc' #may need to change r1i1p1f1_gn depending on climate model
+            for yr in range(2020, 2100):
+                file_name = f'{prod}_day_{mod}_{sc}_r1i1p1f2_gr_{yr}.nc' #may need to change r1i1p1f1_gn depending on climate model
                 #open file
                 file = xr.open_dataset(f'ncss_data/{mod}/{sc}/{prod}/{file_name}')
                 #go through all combinations of lat and lon and calculate average of a product
@@ -62,6 +62,6 @@ for mod in model:
                 df_temp['date'] = pd.to_datetime(df_temp['date'])
                 df = pd.concat([df, df_temp], axis=0)
                 #save file
-                df.to_csv(f'ncss_data/processed/{prod}_{mod}_{sc}.csv', index=False)
+                df.to_csv(f'ncss_data/processed/{basin_name}/{prod}_{mod}_{sc}.csv', index=False)
             print(f'Saved {prod}_{mod}_{sc}.csv')
 
