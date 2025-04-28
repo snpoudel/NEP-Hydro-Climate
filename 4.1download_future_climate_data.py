@@ -9,13 +9,13 @@ lon_max = 88.0  # Eastern boundary
 
 # Models and scenarios
 # models = ['ACCESS-CM2', 'CNRM-CM6-1']
-models = ['ACCESS-CM2']
+models = ['CNRM-CM6-1']
 # scenarios = ['ssp245', 'ssp585']
-scenarios = ['historical']
-product = ['tasmax', 'tasmin']
+scenarios = ['hist']
+product = ['pr', 'tasmax', 'tasmin']
 # Base URL
-version = 'r1i1p1f1' #check if climate data is available for this version
-# version = 'r1i1p1f2' #check if climate data is available for this version
+# version = 'r1i1p1f1' #check if climate data is available for this version
+version = 'r1i1p1f2' #check if climate data is available for this version
 base_url = "https://ds.nccs.nasa.gov/thredds/ncss/grid/AMES/NEX/GDDP-CMIP6"
 #this provides precipitation in kg/m2/s and temperature in K
 
@@ -28,8 +28,8 @@ for model in models:
             os.makedirs(output_dir, exist_ok=True)
 
             # Loop through years from 2020 to 2100
-            for year in range(1950, 2015):
-                filename = f"{prod}_day_{model}_{scenario}_{version}_gn_{year}.nc" #may need to change gr to gr1 or gn or .. depending on climate model
+            for year in range(2020, 2100):
+                filename = f"{prod}_day_{model}_{scenario}_{version}_gr_{year}.nc" #may need to change gr to gr1 or gn or .. depending on climate model
                 request_url = (
                     f"{base_url}/{model}/{scenario}/{version}/{prod}/{filename}?var={prod}"
                     f"&north={lat_max}&south={lat_min}&west={lon_min}&east={lon_max}"

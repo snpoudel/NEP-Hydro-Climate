@@ -4,5 +4,7 @@ gis/*
 output/*
 __pycache__/*
 ncss_data/*
+venv-nphydro/
+venv-nphydro/*
 
 
