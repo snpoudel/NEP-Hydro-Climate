@@ -66,13 +66,14 @@ for i, row in basin_list.iterrows():
         'ssp585': ((q585 - hist_q) / hist_q) * 100
     }
 
-# Plot: one figure per return period
-for rp_idx, rp_label in enumerate(rp_labels):
-    fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(8, 6))
+# Plot: one figure per basin (3-row, 1-col for 25/50/100 year changes)
+for basin_name in ['chepe', 'mardi']:
+    basin_id = basin_list[basin_list['name'] == basin_name]['id'].values[0]
 
-    for b_idx, basin_name in enumerate(['chepe', 'mardi']):
-        ax = axes[b_idx]
-        basin_id = basin_list[basin_list['name'] == basin_name]['id'].values[0]
+    fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(7, 8), sharex=False)
+
+    for rp_idx, rp_label in enumerate(rp_labels):
+        ax = axes[rp_idx]
 
         delta_245 = results[basin_name]['ssp245'][:, rp_idx]
         delta_585 = results[basin_name]['ssp585'][:, rp_idx]
@@ -99,26 +100,26 @@ for rp_idx, rp_label in enumerate(rp_labels):
         ci_585_lo = 2 * med_585 - np.nanpercentile(delta_585, 97.5)
         ci_585_hi = 2 * med_585 - np.nanpercentile(delta_585, 2.5)
 
-        #Add CI text
+        # Add CI text box
         ci_text = (f"SSP245: {med_245:.1f}% [{ci_245_lo:.1f}, {ci_245_hi:.1f}]\n"
-                  f"SSP585: {med_585:.1f}% [{ci_585_lo:.1f}, {ci_585_hi:.1f}]")
+                   f"SSP585: {med_585:.1f}% [{ci_585_lo:.1f}, {ci_585_hi:.1f}]")
         ax.text(
-            0.01, 0.97,  # adjust if needed
+            0.99, 0.97,
             ci_text,
             transform=ax.transAxes,
             fontsize=8,
-            ha='left',
+            ha='right',
             va='top',
-            bbox=dict(boxstyle='round,pad=0.4', facecolor='white', edgecolor='gray', alpha=0.8))
-        ax.set_title(f"{basin_name.capitalize()} (ID: {basin_id})")
+            bbox=dict(boxstyle='round,pad=0.4', facecolor='white', edgecolor='gray', alpha=0.8)
+        )
+
+        ax.set_xlabel(f'Percentage (%) Change in {rp_label} Flood Relative to Historical')
         ax.set_ylabel('Frequency')
         ax.grid(True, linestyle='--', alpha=0.5)
+        if rp_idx == 0:
+            ax.legend(fontsize=8, loc='upper left')
 
-        if b_idx == 0:
-            ax.legend(fontsize=8, loc='best')
-
-    axes[-1].set_xlabel(f'Percentage (%) Change in {rp_label} Flood Relative to Historical')
-    plt.tight_layout()
-    plt.savefig(f'figures/relative_change_hist_{rp_label.replace("-", "")}.jpg', dpi=300)
+    fig.suptitle(f"Relative Change in Extreme Flood Quantiles for {basin_name.capitalize()} Basin (ID: {basin_id})")
+    plt.tight_layout(rect=[0, 0.03, 1, 0.99])
+    plt.savefig(f'figures/relative_change_by_rp_{basin_name}.jpg', dpi=300)
     plt.close()
-
