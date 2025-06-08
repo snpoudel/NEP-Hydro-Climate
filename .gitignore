@@ -7,5 +7,5 @@ ncss_data/*
 venv-nphydro/
 venv-nphydro/*
 .DS_Store
-
+latlon_todecimal.py
 
