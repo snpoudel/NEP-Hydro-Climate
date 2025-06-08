@@ -7,7 +7,7 @@ basin_list = pd.read_csv('data/basins.csv', dtype={'id': str})
 #only use chepe and mardi basins as they showed good evaluation performance
 basin_list = basin_list[basin_list['name'].isin(['chepe', 'mardi'])]
 
-scenario = 'ssp245'
+scenario = 'ssp585'
 
 #read basin list
 basin_list = pd.read_csv('data/basins.csv', dtype={'id': str})
@@ -25,7 +25,11 @@ for id in basin_list['name']:
     df['latitude'] = lat
 
     #read calibrated parameters
-    hbv_params = pd.read_csv(f'output/parameter/param_{id}.csv')
+    if id == 'mardi':
+        true_id = 428
+    elif id == 'chepe':
+        true_id = 440
+    hbv_params = pd.read_csv(f'output/parameter/param_{true_id}.csv')
     hbv_params.drop(columns=['station_id'], inplace=True)
     hbv_params = hbv_params.values.flatten()
 

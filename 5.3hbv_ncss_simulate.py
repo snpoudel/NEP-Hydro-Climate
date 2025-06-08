@@ -7,9 +7,9 @@ basin_list = pd.read_csv('data/basins.csv', dtype={'id': str})
 #only keep mardi and chepe basins
 basin_list = basin_list[basin_list['name'].isin(['mardi', 'chepe'])].reset_index(drop=True)
 
-for id in basin_list['name']:
+for id, name in zip(basin_list['id'], basin_list['name']):
     #read input csv file
-    df = pd.read_csv(f"ncss_data/hbv_input/{id}_input.csv")
+    df = pd.read_csv(f"ncss_data/hbv_input/{name}_input.csv")
     #read calibrated parameters
     hbv_params = pd.read_csv(f'output/parameter/param_{id}.csv')
     hbv_params.drop(columns=['station_id'], inplace=True)
@@ -25,4 +25,4 @@ for id in basin_list['name']:
     df = df.round(3)
 
     #save output
-    df.to_csv(f'output/flow/output_{id}.csv', index=False)
+    df.to_csv(f'output/flow/output_{name}.csv', index=False)

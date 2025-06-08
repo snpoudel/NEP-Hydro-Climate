@@ -6,5 +6,6 @@ __pycache__/*
 ncss_data/*
 venv-nphydro/
 venv-nphydro/*
+.DS_Store
 
 

@@ -21,15 +21,17 @@ def kge(obs, sim):
 
 #basin list
 basin_list = pd.read_csv('data/basins_og.csv', dtype={'id': str})
-#only keep chepe and mardi basins
-basin_list = basin_list[basin_list['name'].isin(['chepe', 'mardi'])].reset_index(drop=True)
+# #only keep chepe and mardi basins
+# basin_list = basin_list[basin_list['name'].isin(['chepe', 'mardi'])].reset_index(drop=True)
 
 df_train = pd.DataFrame(columns=['name', 'nse', 'kge', 'rmse'])
 df_test = pd.DataFrame(columns=['name', 'nse', 'kge', 'rmse'])
 
 for id in basin_list['name']:
     #read output
-    out_df = pd.read_csv(f'output/flow/output_{id}.csv')
+    id_to_true_id = {'mardi': 428, 'chepe': 440, 'khimti': 650, 'mai': 728}
+    true_id = id_to_true_id.get(id)
+    out_df = pd.read_csv(f'output/era5flow/output_{true_id}.csv')
     out_df['date'] = pd.to_datetime(out_df['date'])
     out_df['year'] = out_df['date'].dt.year
 

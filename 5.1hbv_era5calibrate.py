@@ -10,16 +10,16 @@ warnings.filterwarnings("ignore")
 #function that reads station ID, takes input for that ID and outputs calibrated parameters and nse values
 def calibNSE(station_id, start_train_year, end_train_year):
     #read input csv file
-    df = pd.read_csv(f"ncss_data/hbv_input/{station_id}_input.csv")
+    df = pd.read_csv(f"data/processed_data/era5/input{station_id}.csv")
     #only used data upto 2005 for calibration
     df = df[(df['date'] >= f'{start_train_year}') & (df['date'] <= f'{end_train_year}')].reset_index(drop=True)
     #hbv model input
     p = df["precip"]
-    temp = df["avgtemp"]
+    temp = df["temp"]
     date = df["date"]
     latitude = df["latitude"]
     routing = 1 # 0: no routing, 1 allows running
-    q_obs = df["obs_flow"] #validation data / observed flow
+    q_obs = df["Streamflow"] #validation data / observed flow
 
     ##genetic algorithm for hbv model calibration
     #reference: https://github.com/rmsolgi/geneticalgorithm
@@ -53,9 +53,9 @@ def calibNSE(station_id, start_train_year, end_train_year):
                         [1,10]]) #maxbas
 
     algorithm_param = {
-        'max_num_iteration': 100,              # Generations, higher is better, but requires more computational time
+        'max_num_iteration': 100,#100              # Generations, higher is better, but requires more computational time
         'max_iteration_without_improv': None,   # Stopping criterion for lack of improvement
-        'population_size': 1000,                 # Number of parameter-sets in a single iteration/generation(to start with population 10 times the number of parameters should be fine!)
+        'population_size': 500,#1000                 # Number of parameter-sets in a single iteration/generation(to start with population 10 times the number of parameters should be fine!)
         'parents_portion': 0.3,                 # Portion of new generation population filled by previous population
         'elit_ratio': 0.01,                     # Portion of the best individuals preserved unchanged
         'crossover_probability': 0.3,           # Chance of existing solution passing its characteristics to new trial solution
@@ -101,10 +101,10 @@ if __name__ == "__main__":
     #read basin list
     basin_list = pd.read_csv('data/basins_og.csv')
     #only keep mardi and chepe basins
-    basin_list = basin_list[basin_list['name'].isin(['mardi', 'chepe'])]
+    # basin_list = basin_list[basin_list['name'].isin(['mardi', 'chepe'])]
     pool = mp.Pool(mp.cpu_count())
 
-    tasks = [(station_id, basin_list[basin_list['name'] == station_id][['start_train_date', 'end_train_date']].values[0]) for station_id in basin_list['name']]
+    tasks = [(station_id, basin_list[basin_list['id'] == station_id][['start_train_date', 'end_train_date']].values[0]) for station_id in basin_list['id']]
     pool.starmap(run_calibration, tasks)
 
     pool.close()
