@@ -55,7 +55,7 @@ basin_list = pd.read_csv('data/basins.csv', dtype={'id': str})
 basin_list = basin_list[basin_list['name'].isin(['chepe', 'mardi'])]
 
 # Set up plot
-fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(8, 8), sharex=True)
+fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(5, 6), sharex=True)
 return_periods = np.array([1.1, 2, 5, 10, 25, 50, 75, 100])
 
 # Loop over basins
@@ -83,23 +83,23 @@ for ax, (idx, row) in zip(axes, basin_list.iterrows()):
 
     # Plot GEV curves and uncertainty bands
     ax.plot(return_periods, q_hist, label='Historical', color=colors['Historical'])
-    ax.fill_between(return_periods, lower_hist, upper_hist, color=colors['Historical'], alpha=0.4)
+    ax.fill_between(return_periods, lower_hist, upper_hist, color=colors['Historical'], alpha=0.3)
 
     ax.plot(return_periods, q_245, label='SSP245', color=colors['SSP245'])
-    ax.fill_between(return_periods, lower_245, upper_245, color=colors['SSP245'], alpha=0.4)
+    ax.fill_between(return_periods, lower_245, upper_245, color=colors['SSP245'], alpha=0.3)
 
     ax.plot(return_periods, q_585, label='SSP585', color=colors['SSP585'])
-    ax.fill_between(return_periods, lower_585, upper_585, color=colors['SSP585'], alpha=0.4)
+    ax.fill_between(return_periods, lower_585, upper_585, color=colors['SSP585'], alpha=0.3)
 
     # Plot empirical return levels
     rp_hist, emp_hist = empirical_return_levels(hist_max.values)
-    ax.scatter(rp_hist, emp_hist, color=colors['Historical'], marker='o', label='Hist (empirical)', zorder=5)
+    ax.scatter(rp_hist, emp_hist, color=colors['Historical'], marker='o', label='Hist (empirical)', zorder=5, s=12)
 
     rp_245, emp_245 = empirical_return_levels(ssp245_max.values)
-    ax.scatter(rp_245, emp_245, color=colors['SSP245'], marker='s', label='SSP245 (empirical)', zorder=5)
+    ax.scatter(rp_245, emp_245, color=colors['SSP245'], marker='s', label='SSP245 (empirical)', zorder=5, s=12)
 
     rp_585, emp_585 = empirical_return_levels(ssp585_max.values)
-    ax.scatter(rp_585, emp_585, color=colors['SSP585'], marker='^', label='SSP585 (empirical)', zorder=5)
+    ax.scatter(rp_585, emp_585, color=colors['SSP585'], marker='^', label='SSP585 (empirical)', zorder=5, s=12)
 
     # Formatting
     ax.set_xscale('log')
@@ -109,7 +109,7 @@ for ax, (idx, row) in zip(axes, basin_list.iterrows()):
 
 # Final plot settings
 axes[-1].set_xlabel('Return Period (years, log scale)')
-axes[0].legend(loc='upper left', ncol=2)
+axes[0].legend(loc='best', ncol=2, fontsize='small')
 plt.tight_layout()
 plt.savefig('figures/gev_return_curves_all_basins.jpg', dpi=300)
 plt.close()
