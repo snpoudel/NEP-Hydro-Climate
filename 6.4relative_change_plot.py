@@ -14,15 +14,25 @@ colors = {
     'SSP585': palette[2]
 }
 
+# Parametric bootstrapping from fitted GEV
 def bootstrap_gev_return_levels(data, return_periods, n_bootstrap=10000):
+    """
+    Perform parametric bootstrapping for GEV return levels.
+    - Fit GEV to original data
+    - Generate synthetic samples from fitted distribution
+    - Refit GEV to each sample and compute return levels
+    """
+    shape, loc, scale = genextreme.fit(data)
     q_boot = np.zeros((n_bootstrap, len(return_periods)))
+
     for i in range(n_bootstrap):
-        sample = np.random.choice(data, size=len(data), replace=True)
+        synthetic_sample = genextreme.rvs(shape, loc=loc, scale=scale, size=len(data))
         try:
-            shape, loc, scale = genextreme.fit(sample)
-            q_boot[i, :] = genextreme.ppf(1 - 1/return_periods, shape, loc=loc, scale=scale)
-        except:
+            shape_b, loc_b, scale_b = genextreme.fit(synthetic_sample)
+            q_boot[i, :] = genextreme.ppf(1 - 1/return_periods, shape_b, loc=loc_b, scale=scale_b)
+        except Exception:
             q_boot[i, :] = np.nan
+
     return q_boot
 
 # Return periods and labels

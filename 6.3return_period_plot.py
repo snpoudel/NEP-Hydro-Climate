@@ -26,16 +26,20 @@ def empirical_return_levels(data):
     rp = (n + 1) / ranks  # Weibull plotting position
     return rp, sorted_data
 
-# Function to fit GEV distribution and compute return levels with confidence intervals
-def fit_gev_and_ci(data, return_periods, n_bootstrap=10000, ci_level=95):
+
+def fit_gev_and_ci(data, return_periods, n_bootstrap=1000, ci_level=95):
+    # Fit GEV to observed data
     shape, loc, scale = genextreme.fit(data)
     q = genextreme.ppf(1 - 1/return_periods, shape, loc=loc, scale=scale)
 
     q_boot = np.zeros((n_bootstrap, len(return_periods)))
-    for i in tqdm(range(n_bootstrap), desc="Bootstrapping", leave=False):
-        resample = np.random.choice(data, size=len(data), replace=True)
+    n = len(data)
+
+    for i in tqdm(range(n_bootstrap), desc="Parametric Bootstrapping", leave=False):
+        # Generate synthetic sample from fitted GEV (parametric bootstrap)
+        synthetic_sample = genextreme.rvs(shape, loc=loc, scale=scale, size=n)
         try:
-            b_shape, b_loc, b_scale = genextreme.fit(resample)
+            b_shape, b_loc, b_scale = genextreme.fit(synthetic_sample)
             q_boot[i, :] = genextreme.ppf(1 - 1/return_periods, b_shape, loc=b_loc, scale=b_scale)
         except:
             q_boot[i, :] = np.nan
@@ -48,7 +52,6 @@ def fit_gev_and_ci(data, return_periods, n_bootstrap=10000, ci_level=95):
     upper = 2 * q - upper_percentile
 
     return q, lower, upper
-
 
 # Read and filter basin list
 basin_list = pd.read_csv('data/basins.csv', dtype={'id': str})
