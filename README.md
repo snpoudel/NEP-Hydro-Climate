@@ -33,9 +33,10 @@ The repository is organized into four categories: data preprocessing, model cali
 | Script                               | Description |
 |--------------------------------------|-------------|
 | `5.1hbv_era5calibrate.py`            | Calibrates the HBV model using ERA5 data and observed streamflow. |
-| `5.2hbv_era5simulate.py`             | Simulates streamflow using ERA5 data and calibrated HBV parameters. |
-| `5.3hbv_ncss_simulate.py`            | Simulates streamflow using historical climate model data. |
-| `5.4hbv_ncss_simulate_future.py`     | Simulates future streamflow using projected climate scenarios. |
+| `5.2postprocessor_hbv.py`            | Develops LGBM post-processing models to correct biases in HBV simulations. |
+| `5.3hbv_era5simulate.py`             | Simulates streamflow using ERA5 data and calibrated HBV parameters. |
+| `5.4hbv_ncss_simulate.py`            | Simulates streamflow using historical climate model data. |
+| `5.5hbv_ncss_simulate_future.py`     | Simulates future streamflow using projected climate scenarios. |
 
 ---
 
