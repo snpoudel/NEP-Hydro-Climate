@@ -1,6 +1,6 @@
 # NEP-Hydro-Climate
 
-This repository contains scripts for hydrological modeling and climate change assessment for small hydropower projects in Nepal. A process-based hydrological model (HBV) is used to simulate streamflow under historical and future climate scenarios, enabling assessment of changes in key design flood statistics under future climate conditions.
+This repository contains scripts for hydrological modeling and climate change impact assessment on design flood statistics for small hydropower projects in Nepal. A process-based hydrological model (HBV) enhanced with a Light Gradient Boosting Machine (LGBM) post-processor is used to simulate streamflow under historical and future climate scenarios, enabling assessment of changes in key design flood statistics under future climate conditions.
 
 ---
 
