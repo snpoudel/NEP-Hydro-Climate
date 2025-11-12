@@ -2,12 +2,13 @@ import numpy as np
 import pandas as pd
 import geopandas as gpd
 import xarray as xr
+import os
 
 ###########################################################################################################################################################################################################################################
 #select basin to process
 basin_list = pd.read_csv('data/basins.csv')
 #read basin shapefile
-basin_name = 'chepe'
+basin_name = 'mai' # mardi, chepe, khimti, mai
 basin_shapefile = gpd.read_file(f'data/gauges_shape_files/{basin_name}/watershed.shp')
 #add a 0.25 degree buffer to the basin
 basin_shapefile = basin_shapefile.buffer(0.1)
@@ -26,8 +27,8 @@ lat_lon_combinations = np.array(np.meshgrid(lat_range, lon_range)).T.reshape(-1,
 ###########################################################################################################################################################################################################################################
 #read future climate data and calculate time series for selected basin
 # model = ['CNRM-CM6-1', 'ACCESS-CM2']
-model = ['ACCESS-CM2']
-scenario = ['historical']
+model = ['ACCESS-CM2'] # CNRM-CM6-1, ACCESS-CM2
+scenario = ['historical'] # historical
 product = ['pr', 'tasmax', 'tasmin']
 
 for mod in model:
@@ -35,7 +36,7 @@ for mod in model:
         for prod in product:
             #loop through years from 2020 to 2100
             df = pd.DataFrame() #to save time series data for each product
-            for yr in range(1950, 2015):
+            for yr in range(1950, 2015): #historical 1950 to 2015, future 2020 to 2099
                 file_name = f'{prod}_day_{mod}_{sc}_r1i1p1f1_gn_{yr}.nc' #may need to change r1i1p1f1_gn depending on climate model
                 #open file
                 file = xr.open_dataset(f'ncss_data/{mod}/{sc}/{prod}/{file_name}')
@@ -62,6 +63,9 @@ for mod in model:
                 df_temp['date'] = pd.to_datetime(df_temp['date'])
                 df = pd.concat([df, df_temp], axis=0)
                 #save file
+                #make directory if it doesn't exist
+                if not os.path.exists(f'ncss_data/processed/{basin_name}'):
+                    os.makedirs(f'ncss_data/processed/{basin_name}')
                 df.to_csv(f'ncss_data/processed/{basin_name}/{prod}_{mod}_{sc}.csv', index=False)
             print(f'Saved {prod}_{mod}_{sc}.csv')
 

@@ -1,5 +1,7 @@
 data/*
 figures/*
+figures copy/*
+paper/*
 gis/*
 output/*
 __pycache__/*
@@ -8,4 +10,4 @@ venv-nphydro/
 venv-nphydro/*
 .DS_Store
 latlon_todecimal.py
-
+Power Plants __ Hydro (More than 1MW).pdf

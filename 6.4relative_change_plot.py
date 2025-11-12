@@ -41,7 +41,7 @@ rp_labels = ['25-year', '50-year', '100-year']
 
 # Load basin info
 basin_list = pd.read_csv('data/basins.csv', dtype={'id': str})
-basin_list = basin_list[basin_list['name'].isin(['chepe', 'mardi'])]
+# basin_list = basin_list[basin_list['name'].isin(['chepe', 'mardi'])]
 
 # Precompute everything once
 results = {}
@@ -77,7 +77,7 @@ for i, row in basin_list.iterrows():
     }
 
 # Plot: one figure per basin (3-row, 1-col for 25/50/100 year changes)
-for basin_name in ['chepe', 'mardi']:
+for basin_name in ['chepe', 'mardi', 'khimti', 'mai']:
     basin_id = basin_list[basin_list['name'] == basin_name]['id'].values[0]
 
     fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(7, 8), sharex=False)
@@ -132,4 +132,4 @@ for basin_name in ['chepe', 'mardi']:
     fig.suptitle(f"Relative Change in Extreme Flood Quantiles for {basin_name.capitalize()} Basin (ID: {basin_id})")
     plt.tight_layout(rect=[0, 0.03, 1, 0.99])
     plt.savefig(f'figures/relative_change_by_rp_{basin_name}.jpg', dpi=300)
-    plt.close()
+    # plt.close()

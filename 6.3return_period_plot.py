@@ -55,21 +55,21 @@ def fit_gev_and_ci(data, return_periods, n_bootstrap=1000, ci_level=95):
 
 # Read and filter basin list
 basin_list = pd.read_csv('data/basins.csv', dtype={'id': str})
-basin_list = basin_list[basin_list['name'].isin(['chepe', 'mardi'])]
+# basin_list = basin_list[basin_list['name'].isin(['chepe', 'mardi'])]
 
 # Set up plot
-fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(5, 6), sharex=True)
+fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(7, 6), sharex=True)
 return_periods = np.array([1.1, 2, 5, 10, 25, 50, 75, 100])
 
 # Loop over basins
-for ax, (idx, row) in zip(axes, basin_list.iterrows()):
+for ax, (idx, row) in zip(axes.flatten(), basin_list.iterrows()):
     basin_id = row['id']
     basin_name = row['name']
 
     # Read data
-    hist = pd.read_csv(f'output/flow/output_{basin_name}.csv')
-    ssp245 = pd.read_csv(f'output/future_flow/output_{basin_name}_ssp245.csv')
-    ssp585 = pd.read_csv(f'output/future_flow/output_{basin_name}_ssp585.csv')
+    hist = pd.read_csv(f'output/pp_flow/output_{basin_name}.csv')
+    ssp245 = pd.read_csv(f'output/pp_future_flow/output_{basin_name}_ssp245.csv')
+    ssp585 = pd.read_csv(f'output/pp_future_flow/output_{basin_name}_ssp585.csv')
 
     for df in [hist, ssp245, ssp585]:
         df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d')
@@ -106,13 +106,21 @@ for ax, (idx, row) in zip(axes, basin_list.iterrows()):
 
     # Formatting
     ax.set_xscale('log')
-    ax.set_ylabel('Streamflow (mm/day)')
     ax.set_title(f'{basin_name.capitalize()} (ID: {basin_id})')
     ax.grid(True, which='both', linestyle='--', linewidth=0.5)
 
 # Final plot settings
-axes[-1].set_xlabel('Return Period (years, log scale)')
-axes[0].legend(loc='best', ncol=2, fontsize='small')
+# x-axis labels and y-axis labels
+axes[0, 0].set_xlabel('Return Period (years)')
+axes[0, 0].set_ylabel('Streamflow (mm/day)')
+axes[0, 1].set_xlabel('Return Period (years)')
+axes[0, 1].set_ylabel('Streamflow (mm/day)')
+axes[1, 0].set_xlabel('Return Period (years)')
+axes[1, 0].set_ylabel('Streamflow (mm/day)')
+axes[1, 1].set_xlabel('Return Period (years)')
+axes[1, 1].set_ylabel('Streamflow (mm/day)')
+
 plt.tight_layout()
 plt.savefig('figures/gev_return_curves_all_basins.jpg', dpi=300)
-plt.close()
+plt.savefig('figures/inkscape/gev_return_curves_all_basins.svg')
+# plt.close()

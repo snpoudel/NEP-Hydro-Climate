@@ -12,7 +12,7 @@ fig, axes = plt.subplots(nrows=4, ncols=1, figsize=(10, 8))
 fig.subplots_adjust(hspace=0.5)
 
 for i, id in enumerate(basin_list['id']):
-    out_df = pd.read_csv(f'output/era5flow/output_{id}.csv')
+    out_df = pd.read_csv(f'output/era5_ppflow/output_{id}.csv')
     out_df['date'] = pd.to_datetime(out_df['date'])
 
     # Get test period end
@@ -46,4 +46,5 @@ for i, id in enumerate(basin_list['id']):
 
 plt.tight_layout()
 plt.savefig('figures/timeseries_plot.jpg', dpi=300)
-plt.close()
+plt.savefig('figures/inkscape/timeseries_plot.svg')
+# plt.close()

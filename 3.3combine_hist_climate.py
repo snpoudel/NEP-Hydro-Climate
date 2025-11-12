@@ -8,20 +8,18 @@ import os
 #read basin list
 basin_list = pd.read_csv('data/basins_og.csv')
 
-basins = ['mardi', 'chepe']
+basins = ['mardi', 'chepe', 'khimti', 'mai']
 models = ['ACCESS-CM2', 'CNRM-CM6-1']
 scenarios = ['historical']
 
 for basin in basins:
     for model in models:
         for scenario in scenarios:
-            file_path = f'C:/Cornell/NEP-Hydro-Climate/ncss_data/processed/{basin}/{model}/{scenario}'
-            os.chdir(file_path)
-
+            file_path = f'ncss_data/processed/{basin}/{model}/{scenario}'
             # read precip, tempmax, tempmin
-            precip = pd.read_csv(f'pr_{model}_{scenario}.csv')
-            tempmax = pd.read_csv(f'tasmax_{model}_{scenario}.csv')
-            tempmin = pd.read_csv(f'tasmin_{model}_{scenario}.csv')
+            precip = pd.read_csv(f'{file_path}/pr_{model}_{scenario}.csv')
+            tempmax = pd.read_csv(f'{file_path}/tasmax_{model}_{scenario}.csv')
+            tempmin = pd.read_csv(f'{file_path}/tasmin_{model}_{scenario}.csv')
 
             # convert precip to mm/day, temp to C
             precip['value'] = precip['value'] * 86400  # mm/day
@@ -35,7 +33,9 @@ for basin in basins:
             df['avgtemp'] = (tempmax['value'] + tempmin['value']) / 2
 
             # save the dataframe to a csv file
-            output_path = f'C:/Cornell/NEP-Hydro-Climate/ncss_data/processed/{basin}_{model}_{scenario}.csv'
+            if not os.path.exists('ncss_data/processed'):
+                os.makedirs('ncss_data/processed')
+            output_path = f'ncss_data/processed/{basin}_{model}_{scenario}.csv'
             df.to_csv(output_path, index=False)
             print(f'Processed {basin} {model} {scenario}')
 
